@@ -2,15 +2,26 @@ var path = require('path');
 var webpack = require('webpack');
 module.exports = {
     cache: true,
+
+
     entry: {
       app: './app/jsx/app.jsx'
     },
+
+
     output: {
       path: path.join(__dirname, 'dist'),
       publicPath: 'dist/',
       filename: '[name].js',
       chunkFilename: '[chunkhash].js'
     },
+
+
+    resolve: {
+      extensions: ['', '.js', '.jsx'] 
+    },
+
+
     module: {
       loaders: [
         {test: /\.jsx$/, loader: 'jsx-loader?insertPragma=React.DOM&harmony' },
