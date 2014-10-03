@@ -5,6 +5,15 @@
 This is a simple boilerplate project to start fast with Reactjs, webpack and
 gulp.
 
+## Usage
+
+Copy this repo.
+
+### Webpack-dev-server:
+
+* Run `gulp`
+* Open http://localhost:8080/webpack-dev-server/
+
 
 ## License
 
