@@ -21,6 +21,12 @@ Copy this repo.
 When running, you can edit HelloWorld.react.jsx and save it, your edits will
 be visible without reloading.
 
+### Build for server:
+
+* Run `gulp build`
+
+This will create the minified build files
+
 ## License
 
 Copyright (c) 2014 Thomas Coopoman

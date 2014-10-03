@@ -8,7 +8,7 @@ class _HelloWorld {
     return (
       <div>
         <h1>Hello World</h1>
-        <img src={exampleImage} width="600px"/>
+        <img src={exampleImage} width="500px"/>
         <p>Picture from <a href="https://unsplash.com/">https://unsplash.com/</a></p>
       </div>
     );

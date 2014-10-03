@@ -1,19 +1,39 @@
-var gulp = require("gulp");
-var gutil = require("gulp-util");
-var webpack = require("webpack");
-var WebpackDevServer = require("webpack-dev-server");
-var webpackConfig = require("./webpack.config.js");
+var gulp = require('gulp');
+var gutil = require('gulp-util');
+var replace = require('gulp-replace')
+var runSequence = require('run-sequence');
+var del = require('del');
+var webpack = require('webpack');
+var WebpackDevServer = require('webpack-dev-server');
+var webpackConfig = require('./webpack.config.js');
 var path = require('path');
 
 var app = 'app';
 var appJoin = path.join.bind(null, app);
 var dist = 'dist';
 var distJoin = path.join.bind(null, dist);
-globs = {
+var globs = {
     stylus: 'styles/**/*.styl',
     jsx: 'jsx/**/*.jsx',
     html: '**/*.html'
 };
+
+// The development server (the recommended option for development)
+gulp.task('default', function(callback) {
+	runSequence('clean', 'html', 'webpack-dev-server', callback);
+});
+
+
+// Production build
+gulp.task('build', function(callback) {
+	runSequence('clean', 'html', 'webpack:build', callback);
+});
+
+
+gulp.task('clean', function(cb) {
+  del(['./dist/**/*'], cb);
+});
+
 
 gulp.task('html', function () {
   gulp.src(appJoin(globs.html))
@@ -41,7 +61,10 @@ gulp.task('webpack:build', function(callback) {
 	webpack(myConfig, function(err, stats) {
 		if(err) throw new gutil.PluginError('webpack:build', err);
 		// replace app.js in the index file with the hash name
-		var appJsName = stats.toJson().assetsByChunkName.main;
+		var appJsName = stats.toJson().assetsByChunkName.app;
+    console.log('test');
+    console.log(appJsName);
+    console.log(stats.toJson().assetsByChunkName);
 		gulp.src('./app/index.html')
 			.pipe(replace('app.js', appJsName))
 			.pipe(gulp.dest('./dist/'));
@@ -73,7 +96,7 @@ gulp.task('webpack:build-dev', function(callback) {
 
 
 // The development server (the recommended option for development)
-gulp.task("default", ['html', "webpack-dev-server"]);
+gulp.task('default', ['html', 'webpack-dev-server']);
 
 gulp.task('webpack-dev-server', function(callback) {
 	// modify some webpack config options
