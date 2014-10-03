@@ -89,7 +89,7 @@ gulp.task('webpack-dev-server', function(callback) {
 	new WebpackDevServer(webpack(myConfig), {
     contentBase: './dist',
     hot: true,
-		publicPath: '/',
+		publicPath: myConfig.output.publicPath,
 		stats: {
 			colors: true
 		}

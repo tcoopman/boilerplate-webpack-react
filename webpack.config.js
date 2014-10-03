@@ -24,7 +24,7 @@ module.exports = {
 
     module: {
       loaders: [
-        {test: /\.jsx$/, loader: 'jsx-loader?insertPragma=React.DOM&harmony' },
+        {test: /\.jsx$/, loaders: ['react-hot', 'jsx-loader?insertPragma=React.DOM&harmony'] },
         {test: /\.styl$/, loader: 'style!css!stylus?paths=node_modules/jeet/stylus/'},
         {test: /.*\.(gif|png|jpg)$/, loaders: ['file?hash=sha512&digest=hex&size=16&name=static/[hash].[ext]', 'image?optimizationLevel=7&interlaced=false']}
       ]
