@@ -7,16 +7,28 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "devDependencies": {
+    "css-loader": "^0.9.0",
+    "file-loader": "^0.7.2",
     "gulp": "^3.8.8",
-    "webpack": "^1.4.4",
-    "webpack-dev-server": "^1.6.5",
-    "react": "^0.11.2",
     "gulp-util": "^3.0.1",
+    "image-webpack-loader": "0.0.7",
     "jsx-loader": "^0.11.2",
+    "react": "^0.11.2",
+    "react-hot-loader": "^0.4.5",
     "style-loader": "^0.8.1",
     "stylus-loader": "^0.4.0",
-    "css-loader": "^0.9.0"
+    "webpack": "^1.4.4",
+    "webpack-dev-server": "^1.6.5"
   },
-  "author": "",
-  "license": "ISC"
+  "author": "Thomas Coopman @tcoopman",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:tcoopman/boilerplate-webpack-react.git"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://www.opensource.org/licenses/mit-license.php"
+    }
+  ]
 }
