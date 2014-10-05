@@ -62,9 +62,6 @@ gulp.task('webpack:build', function(callback) {
 		if(err) throw new gutil.PluginError('webpack:build', err);
 		// replace app.js in the index file with the hash name
 		var appJsName = stats.toJson().assetsByChunkName.app;
-    console.log('test');
-    console.log(appJsName);
-    console.log(stats.toJson().assetsByChunkName);
 		gulp.src('./app/index.html')
 			.pipe(replace('app.js', appJsName))
 			.pipe(gulp.dest('./dist/'));
