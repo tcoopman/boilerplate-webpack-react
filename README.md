@@ -27,6 +27,10 @@ be visible without reloading.
 
 This will create the minified build files
 
+## TODO
+
+* expand the example code with fonts and json
+
 ## License
 
 Copyright (c) 2014 Thomas Coopoman
