@@ -1,6 +1,6 @@
+'use strict';
 var gulp = require('gulp');
 var gutil = require('gulp-util');
-var replace = require('gulp-replace')
 var runSequence = require('run-sequence');
 var del = require('del');
 var webpack = require('webpack');
@@ -8,63 +8,50 @@ var WebpackDevServer = require('webpack-dev-server');
 var webpackConfig = require('./webpack.config.js');
 var path = require('path');
 
-var app = 'app';
-var appJoin = path.join.bind(null, app);
-var dist = 'dist';
+var dist = 'public';
 var distJoin = path.join.bind(null, dist);
-var globs = {
-    stylus: 'styles/**/*.styl',
-    jsx: 'jsx/**/*.jsx',
-    html: '**/*.html'
-};
 
 // The development server (the recommended option for development)
 gulp.task('default', function(callback) {
-	runSequence('clean', 'html', 'webpack-dev-server', callback);
+	runSequence('clean', 'webpack-dev-server', callback);
 });
 
 
 // Production build
 gulp.task('build', function(callback) {
-	runSequence('clean', 'html', 'webpack:build', callback);
+	runSequence('clean', 'webpack:build', callback);
 });
 
 
 gulp.task('clean', function(cb) {
-  del(['./dist/**/*'], cb);
-});
-
-
-gulp.task('html', function () {
-  gulp.src(appJoin(globs.html))
-    .pipe(gulp.dest(distJoin()));
+  del(['./public/**/*'], cb);
 });
 
 
 gulp.task('webpack:build', function(callback) {
 	// modify some webpack config options
-	var myConfig = Object.create(webpackConfig);
-	myConfig.output.filename = 'app.[hash].js';
-  myConfig.plugins = myConfig.plugins || [];
-	myConfig.plugins = myConfig.plugins.concat(
-		new webpack.DefinePlugin({
-			'process.env': {
-				// This has effect on the react lib size
-				'NODE_ENV': JSON.stringify('production')
-			}
-		}),
-		new webpack.optimize.DedupePlugin(),
-		new webpack.optimize.UglifyJsPlugin()
-	);
+  var prodConfig = webpackConfig.map(function(config) {
+    var myConfig = Object.create(config);
+    myConfig.plugins = myConfig.plugins || [];
+    myConfig.plugins = myConfig.plugins.concat(
+      new webpack.DefinePlugin({
+        'process.env': {
+          // This has effect on the react lib size
+          NODE_ENV: JSON.stringify('production')
+        }
+      }),
+      new webpack.optimize.DedupePlugin(),
+      new webpack.optimize.UglifyJsPlugin()
+    );
+
+    return myConfig;
+  });
 
 	// run webpack
-	webpack(myConfig, function(err, stats) {
-		if(err) throw new gutil.PluginError('webpack:build', err);
-		// replace app.js in the index file with the hash name
-		var appJsName = stats.toJson().assetsByChunkName.app;
-		gulp.src('./app/index.html')
-			.pipe(replace('app.js', appJsName))
-			.pipe(gulp.dest('./dist/'));
+	webpack(prodConfig, function(err, stats) {
+		if (err) {
+      throw new gutil.PluginError('webpack:build', err);
+    }
 		gutil.log('[webpack:build]', stats.toString({
 			colors: true
 		}));
@@ -72,49 +59,67 @@ gulp.task('webpack:build', function(callback) {
 	});
 });
 
-// modify some webpack config options
-var myDevConfig = Object.create(webpackConfig);
-myDevConfig.devtool = 'sourcemap';
-myDevConfig.debug = true;
-
-// create a single instance of the compiler to allow caching
-var devCompiler = webpack(myDevConfig);
-
-gulp.task('webpack:build-dev', function(callback) {
-	// run webpack
-	devCompiler.run(function(err, stats) {
-		if(err) throw new gutil.PluginError('webpack:build-dev', err);
-		gutil.log('[webpack:build-dev]', stats.toString({
-			colors: true
-		}));
-		callback();
-	});
-});
-
-
-// The development server (the recommended option for development)
-gulp.task('default', ['html', 'webpack-dev-server']);
 
 gulp.task('webpack-dev-server', function(callback) {
+  var publicPath = 'http://localhost:8080/assets/';
+
 	// modify some webpack config options
-	var myConfig = Object.create(webpackConfig);
-	myConfig.devtool = 'eval';
-	myConfig.debug = true;
-  myConfig.plugins = [new webpack.HotModuleReplacementPlugin()];
-	myConfig.entry = [
-		'webpack-dev-server/client?http://localhost:3000', 'webpack/hot/dev-server', './app/jsx/app.jsx'
+  var browserConfig = webpackConfig.filter(function(config) {
+    return config.name === 'browser';
+  })[0];
+
+	browserConfig = Object.create(browserConfig);
+
+	browserConfig.devtool = 'eval';
+	browserConfig.debug = true;
+  browserConfig.plugins = browserConfig.plugins || [];
+  browserConfig.plugins = browserConfig.plugins.concat([new webpack.HotModuleReplacementPlugin()]);
+	browserConfig.entry = [
+		'webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server', './app/jsx/app.jsx'
 	];
 
-	// Start a webpack-dev-server
-	new WebpackDevServer(webpack(myConfig), {
-    contentBase: './dist',
-    hot: true,
-		publicPath: myConfig.output.publicPath,
-		stats: {
+  // don't extract the css to a file for the dev server.
+  browserConfig.module.loaders = browserConfig.module.loaders.map(function(loader) {
+    if (loader.test.toString() === /\.styl$/.toString()) {
+      return {test: /\.styl$/, loader: 'style!css!stylus'};
+    } else {
+      return loader;
+    }
+  });
+
+  browserConfig.output.publicPath = publicPath;
+
+  // modify some webpack config options of the server
+  var serverConfig = Object.create(webpackConfig.filter(function(config) {
+    return config.name === 'server';
+  })[0]);
+
+  // FIXME we musn't overwrite the plugins, only change the PUBLIC_PATH
+  serverConfig.plugins = [
+    new webpack.DefinePlugin({
+      PUBLIC_PATH: JSON.stringify(publicPath)
+    })
+  ];
+
+	// run webpack
+	webpack(serverConfig, function(err, stats) {
+		if (err) {
+      throw new gutil.PluginError('webpack:build', err);
+    }
+		gutil.log('[webpack:build]', stats.toString({
 			colors: true
-		}
-	}).listen(8080, 'localhost', function(err) {
-		if(err) throw new gutil.PluginError('webpack-dev-server', err);
-		gutil.log('[webpack-dev-server]', 'http://localhost:8080/webpack-dev-server/index.html');
+		}));
+    // Start a webpack-dev-server
+    new WebpackDevServer(webpack(browserConfig), {
+      contentBase: './public',
+      hot: true,
+      publicPath: '/assets/',
+      stats: {
+        colors: true
+      }
+    }).listen(8080, 'localhost', function(err) {
+      if(err) throw new gutil.PluginError('webpack-dev-server', err);
+      gutil.log('[webpack-dev-server]', 'http://localhost:8080/webpack-dev-server/index.html');
+    });
 	});
 });

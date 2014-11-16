@@ -9,6 +9,11 @@ This includes some webpack loaders like [image-webpack-loader](https://www.npmjs
 for optimizing images and other cool things like [Hot Module Replacement](http://gaearon.github.io/react-hot-loader/)
 for React.
 
+### New
+
+Support for offline rendering. This uses [hapi](http://hapijs.com/) for the server
+but you can easily change that in `server\index.js`
+
 ## Usage
 
 Copy this repo.
@@ -16,7 +21,8 @@ Copy this repo.
 ### Webpack-dev-server:
 
 * Run `gulp`
-* Open http://localhost:8080/webpack-dev-server/
+* Run `node server`
+* Open http://localhost:3000
 
 When running, you can edit HelloWorld.react.jsx and save it, your edits will
 be visible without reloading.
@@ -26,6 +32,8 @@ be visible without reloading.
 * Run `gulp build`
 
 This will create the minified build files
+
+To test it, run `node server`.
 
 ## TODO
 
