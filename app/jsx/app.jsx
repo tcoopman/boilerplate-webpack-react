@@ -1,8 +1,9 @@
-const React = require('react');
-const HelloWorld = require('./components/HelloWorld.react');
+/* @flow */
+var React = require('react');
+var HelloWorld = require('./components/HelloWorld.react');
 
 
-const render = () => React.renderComponent(
+var render = () => React.render(
     <HelloWorld />,
     document.body
 );

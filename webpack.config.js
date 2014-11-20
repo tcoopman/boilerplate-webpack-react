@@ -8,7 +8,7 @@ var ExtractTextPlugin = require('extract-text-webpack-plugin');
 var commonLoaders = [
   {test: /.*\.json$/, loader: 'json'},
   {test: /.*\.md$/, loader: 'file'},
-  {test: /\.jsx$/, loaders: ['react-hot', 'jsx?insertPragma=React.DOM&harmony']},
+  {test: /\.jsx$/, loaders: ['react-hot', 'jsx?insertPragma=React.DOM&harmony&stripTypes']},
   {test: /.*\.(gif|png|jpg)$/, loaders: ['file?hash=sha512&digest=hex&size=16&name=[hash].[ext]', 'image-webpack-loader?optimizationLevel=7&interlaced=false']},
   {test: /.*\.(eot|woff|ttf|svg)/, loader: 'file?hash=sha512&digest=hex&size=16&name=cd [hash].[ext]'}
 ];

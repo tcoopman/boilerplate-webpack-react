@@ -1,6 +1,7 @@
-const React = require('react');
+/* @flow */
+var React = require('react');
 
-const exampleImage = require('../../images/example.jpg');
+var exampleImage = require('../../images/example.jpg');
 
 
 class _HelloWorld {

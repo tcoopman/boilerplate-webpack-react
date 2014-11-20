@@ -1,0 +1,7 @@
+[ignore]
+/home/thomas/Workspace/boilerplate-webpack-react/node_modules/flow-bin/vendor
+/home/thomas/Workspace/boilerplate-webpack-react/app/images
+
+[include]
+/home/thomas/Workspace/boilerplate-webpack-react/app/images/jsx
+/home/thomas/Workspace/boilerplate-webpack-react/server

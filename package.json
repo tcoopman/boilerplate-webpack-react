@@ -25,7 +25,8 @@
     "good": "^4.0.0",
     "hapi": "^7.5.2",
     "extract-text-webpack-plugin": "^0.3.4",
-    "good-console": "^2.0.1"
+    "good-console": "^2.0.1",
+    "flow-bin": "^0.1.1"
   },
   "author": "Thomas Coopman @tcoopman",
   "repository": {
@@ -37,5 +38,9 @@
       "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
-  ]
+  ],
+  "dependencies": {
+    "react": "^0.12.1",
+    "jsx-loader": "^0.12.2"
+  }
 }
