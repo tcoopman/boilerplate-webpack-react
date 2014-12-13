@@ -95,12 +95,12 @@ module.exports =
 /* 2 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var __hotUpdateAPI = (function () { var React = __webpack_require__(1); var getHotUpdateAPI = __webpack_require__(3); return getHotUpdateAPI(React, "HelloWorld.react.jsx", module.id); })(); if (false) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HelloWorld.react.jsx" + ": " + err.message); } }); module.hot.dispose(function () { var nextTick = require("/home/thomas/Workspace/boilerplate-webpack-react/node_modules/react-hot-loader/node_modules/next-tick/index.js"); nextTick(__hotUpdateAPI.updateMountedInstances); }); }
+	/* REACT HOT LOADER */ if (false) { (function () { var reactHotApi = require("/home/thomas/Workspace/boilerplate-webpack-react/node_modules/react-hot-loader/node_modules/react-hot-api/modules/index.js"); if (typeof reactHotApi !== "function") {   return; }  module.makeHot = module.hot.data ? module.hot.data.makeHot : reactHotApi(require("react/lib/ReactMount")); })(); }
 
 	/** @jsx React.DOM *//* @flow */
 	var React = __webpack_require__(1);
 
-	var exampleImage = __webpack_require__(5);
+	var exampleImage = __webpack_require__(3);
 
 
 	function _HelloWorld(){"use strict";}
@@ -114,252 +114,16 @@ module.exports =
 	    );
 	  };
 
-	module.exports = __hotUpdateAPI.createClass(_HelloWorld.prototype);
+	module.exports = React.createClass(_HelloWorld.prototype);
 
+
+	/* REACT HOT LOADER */ if (false) { module.hot.accept(function (err) { if (err) { console.error("Cannot not apply hot update to " + "HelloWorld.react.jsx" + ": " + err.message); } }); module.hot.dispose(function (data) {   data.makeHot = module.makeHot; }); if (module.exports && module.makeHot) {   module.exports = module.makeHot(module.exports, "__MODULE_EXPORTS") } }
 
 /***/ },
 /* 3 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
-
-	var updaters = {},
-	    makeModuleUpdater = __webpack_require__(4);
-
-	function getHotUpdateAPI(React, filename, moduleId) {
-	  var exists = updaters.hasOwnProperty(moduleId);
-	  if (!exists) {
-	    updaters[moduleId] = makeModuleUpdater(React, filename);
-	  }
-
-	  var updater = updaters[moduleId];
-	  return {
-	    createClass: exists ? updater.updateClass : updater.createClass,
-	    updateMountedInstances: updater.updateMountedInstances
-	  };
-	}
-
-	module.exports = getHotUpdateAPI;
-
-/***/ },
-/* 4 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	/**
-	 * Provides `createClass` and `updateClass` which can be used as drop-in
-	 * replacement for `React.createClass` in a module. If multiple components
-	 * are defined in the same module, assumes their `displayName`s are different.
-	 */
-	module.exports = function (React, filename) {
-	  var componentUpdaters = {};
-
-	  function createClass(spec) {
-	    var displayName = spec.displayName,
-	        componentUpdater;
-
-	    if (componentUpdaters[displayName]) {
-	      throw new Error(
-	        'Found duplicate displayName in ' + filename + ': "' + displayName + '".\n' +
-	        'react-hot-loader uses displayName to distinguish between several components in one file.'
-	      );
-	    }
-
-	    componentUpdater = __webpack_require__(6)(React);
-	    componentUpdaters[displayName] = componentUpdater;
-
-	    return componentUpdater.createClass(spec);
-	  }
-
-	  function updateClass(spec) {
-	    var displayName = spec.displayName,
-	        componentUpdater = componentUpdaters[displayName];
-
-	    return componentUpdater ?
-	      componentUpdater.updateClass(spec) :
-	      createClass(spec);
-	  }
-
-	  function updateMountedInstances() {
-	    Object.keys(componentUpdaters).forEach(function (displayName) {
-	      componentUpdaters[displayName].updateMountedInstances();
-	    });
-	  }
-
-	  return {
-	    createClass: createClass,
-	    updateClass: updateClass,
-	    updateMountedInstances: updateMountedInstances
-	  };
-	};
-
-/***/ },
-/* 5 */
-/***/ function(module, exports, __webpack_require__) {
-
-	module.exports = __webpack_require__.p + "630593064214887e.jpg"
-
-/***/ },
-/* 6 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	/**
-	 * Provides `createClass` and `updateClass` which can be used to create and
-	 * later patch a single component with a new version of itself.
-	 */
-	module.exports = function (React) {
-	  var mounted = [];
-
-	  /**
-	   * Keeps track of mounted instances.
-	   */
-	  var TrackInstancesMixin = {
-	    componentDidMount: function () {
-	      mounted.push(this);
-	    },
-
-	    componentWillUnmount: function () {
-	      mounted.splice(mounted.indexOf(this), 1);
-	    }
-	  };
-
-
-	  /**
-	   * Establishes a prototype as the "source of truth" and updates its methods on
-	   * subsequent invocations, also patching fresh prototypes to pass calls to it.
-	   */
-	  var assimilatePrototype = (function () {
-	    var storedPrototype,
-	        knownPrototypes = [];
-
-	    function wrapFunction(key) {
-	      return function () {
-	        if (storedPrototype[key]) {
-	          return storedPrototype[key].apply(this, arguments);
-	        }
-	      };
-	    }
-
-	    function patchProperty(proto, key) {
-	      proto[key] = storedPrototype[key];
-
-	      if (typeof proto[key] !== 'function' ||
-	        key === 'type' ||
-	        key === 'constructor') {
-	        return;
-	      }
-
-	      proto[key] = wrapFunction(key);
-
-	      if (proto.__reactAutoBindMap[key]) {
-	        proto.__reactAutoBindMap[key] = proto[key];
-	      }
-	    }
-
-	    function updateStoredPrototype(freshPrototype) {
-	      storedPrototype = {};
-
-	      for (var key in freshPrototype) {
-	        if (freshPrototype.hasOwnProperty(key)) {
-	          storedPrototype[key] = freshPrototype[key];
-	        }
-	      }
-	    }
-
-	    function reconcileWithStoredPrototypes(freshPrototype) {
-	      knownPrototypes.push(freshPrototype);
-	      knownPrototypes.forEach(function (proto) {
-	        for (var key in storedPrototype) {
-	          patchProperty(proto, key);
-	        }
-	      });
-	    }
-
-	    return function (freshPrototype) {
-	      updateStoredPrototype(freshPrototype);
-	      reconcileWithStoredPrototypes(freshPrototype);
-	    };
-	  })();
-
-
-	  /**
-	   * Mixes instance tracking into the spec, lets React produce a fresh version
-	   * of the component and assimilates its changes into the old version.
-	   */
-	  function injectMixinAndAssimilatePrototype(spec) {
-	    spec.mixins = spec.mixins || [];
-	    spec.mixins.push(TrackInstancesMixin);
-	    var Component = (React.createClass)(spec);
-	    assimilatePrototype(Component.type.prototype);
-	    return Component;
-	  }
-
-
-	  /**
-	   * Updates a React component recursively, so even if children define funky
-	   * `shouldComponentUpdate`, they are forced to re-render.
-	   */
-	  function forceUpdateTree(instance) {
-	    if (instance.forceUpdate) {
-	      instance.forceUpdate();
-	    }
-
-	    if (instance._renderedComponent) {
-	      forceUpdateTree(instance._renderedComponent);
-	    }
-
-	    for (var key in instance._renderedChildren) {
-	      forceUpdateTree(instance._renderedChildren[key]);
-	    }
-	  }
-
-
-	  var Component;
-
-	  /**
-	   * Proxies React.createClass to enable hot updates.
-	   */
-	  function createClass(spec) {
-	    if (Component) {
-	      throw new Error('createClass may only be called once for a given updater.');
-	    }
-
-	    Component = injectMixinAndAssimilatePrototype(spec);
-	    return Component;
-	  }
-
-	  /**
-	   * Proxies React.createClass to apply hot update.
-	   */
-	  function updateClass(spec) {
-	    if (!Component) {
-	      throw new Error('updateClass may only be called after createClass.');
-	    }
-
-	    injectMixinAndAssimilatePrototype(spec);
-	    return Component;
-	  }
-
-	  /**
-	   * Re-binds methods of mounted instances and re-renders them.
-	   */
-	  function updateMountedInstances() {
-	    mounted.forEach(function (instance) {
-	      instance._bindAutoBindMethods();
-	      forceUpdateTree(instance);
-	    });
-	  }
-
-	  return {
-	    createClass: createClass,
-	    updateClass: updateClass,
-	    updateMountedInstances: updateMountedInstances
-	  };
-	};
-
+	module.exports = __webpack_require__.p + "c71eceaa211e1a6866c25ef0ce8ac0ae.jpg"
 
 /***/ }
 /******/ ])

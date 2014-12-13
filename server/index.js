@@ -6,7 +6,8 @@ var page = require('./page.generated.js');
 
 var stats = require('./stats.generated.json');
 
-var server = new Hapi.Server(3000);
+var server = new Hapi.Server();
+server.connection({port: 3000});
 
 
 server.route({
@@ -39,8 +40,8 @@ var options = {
 };
 
 
-server.pack.register({
-  plugin: require('good'),
+server.register({
+  register: require('good'),
   options: options
 }, function (err) {
   if (err) {
