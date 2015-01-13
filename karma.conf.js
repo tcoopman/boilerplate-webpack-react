@@ -48,7 +48,8 @@ module.exports = function(config) {
 
       module: {
         loaders: [
-          {test: /\.jsx$/, loaders: ['6to5-loader'] }
+          {test: /\.jsx$/, loaders: ['6to5-loader'] },
+          {test: /.*\.(gif|png|jpg)$/, loaders: ['file?hash=sha512&digest=hex&size=16&name=[hash].[ext]', 'image-webpack-loader?optimizationLevel=7&interlaced=false']}
         ]
       }
     },
