@@ -39,5 +39,9 @@
       "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
-  ]
+  ],
+  "devDependencies": {
+    "6to5": "^2.11.4",
+    "6to5-loader": "^2.0.0"
+  }
 }
