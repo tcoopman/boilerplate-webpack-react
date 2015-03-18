@@ -1,5 +1,5 @@
 /* @flow */
-var React = require('react');
+import React from 'react';
 
 var exampleImage = require('../../images/example.jpg');
 

@@ -1,10 +1,10 @@
 /* @flow */
-var React = require('react');
-var HelloWorld = require('./components/HelloWorld.react');
+import React from 'react';
+import Helloworld from './components/HelloWorld.react';
 
 
-var render = () => React.render(
+const render = () => React.render(
     <HelloWorld />,
-    document.body
+    document.getElementById('react-content')
 );
 render();
