@@ -1,6 +1,6 @@
 {
   "name": "boilerplate-webpack-react",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -32,13 +32,13 @@
     "webpack-dev-server": "^1.7.0"
   },
   "devDependencies": {
-   "karma": "^0.12.31",
-   "karma-chrome-launcher": "^0.1.7",
-   "karma-mocha": "^0.1.10",
-   "karma-webpack": "^1.5.0",
-   "mocha": "^2.1.0",
-   "should": "^4.5.1"
- },
+    "karma": "^0.12.32",
+    "karma-chrome-launcher": "^0.1.7",
+    "karma-mocha": "^0.1.10",
+    "karma-webpack": "^1.5.0",
+    "mocha": "^2.1.0",
+    "should": "^5.2.0"
+  },
   "author": "Thomas Coopman @tcoopman",
   "repository": {
     "type": "git",
@@ -49,13 +49,5 @@
       "type": "MIT",
       "url": "http://www.opensource.org/licenses/mit-license.php"
     }
-  ],
-  "devDependencies": {
-    "karma": "^0.12.32",
-    "karma-chrome-launcher": "^0.1.7",
-    "karma-mocha": "^0.1.10",
-    "karma-webpack": "^1.5.0",
-    "mocha": "^2.1.0",
-    "should": "^5.2.0"
-  }
+  ]
 }
