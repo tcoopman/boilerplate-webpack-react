@@ -73,9 +73,9 @@ gulp.task('webpack-dev-server', function(callback) {
 	browserConfig.devtool = 'eval';
 	browserConfig.debug = true;
   browserConfig.plugins = browserConfig.plugins || [];
-  browserConfig.plugins = browserConfig.plugins.concat([new webpack.HotModuleReplacementPlugin()]);
+  browserConfig.plugins = browserConfig.plugins.concat([new webpack.HotModuleReplacementPlugin(), new webpack.NoErrorsPlugin()]);
 	browserConfig.entry = [
-		'webpack-dev-server/client?http://localhost:8080', 'webpack/hot/dev-server', './app/jsx/app.jsx'
+		'webpack-dev-server/client?http://localhost:8080', 'webpack/hot/only-dev-server', './app/jsx/app.jsx'
 	];
 
   // don't extract the css to a file for the dev server.

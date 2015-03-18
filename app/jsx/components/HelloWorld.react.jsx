@@ -4,7 +4,7 @@ var React = require('react');
 var exampleImage = require('../../images/example.jpg');
 
 
-class _HelloWorld {
+export default class HelloWorld extends React.Component {
   render () {
     return (
       <div>
@@ -15,4 +15,3 @@ class _HelloWorld {
     );
   }
 }
-module.exports = React.createClass(_HelloWorld.prototype);
