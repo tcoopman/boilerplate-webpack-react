@@ -30,7 +30,7 @@ module.exports = function(request, fileNames, cb) {
 				{StyleElem}
 			</head>
 			<body>
-				<div id='content' dangerouslySetInnerHTML={{__html: html}} />
+				<div id='react-content' dangerouslySetInnerHTML={{__html: html}} />
 				<script src={script}></script>
 			</body>
 		</html>
