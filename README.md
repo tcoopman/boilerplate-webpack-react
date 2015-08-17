@@ -1,6 +1,6 @@
 # Boilerplate-webpack-react
 
-## Instroduction
+## Introduction
 
 This is a simple boilerplate project to start fast with Reactjs, webpack and
 gulp, including offline rendering with hapi.
