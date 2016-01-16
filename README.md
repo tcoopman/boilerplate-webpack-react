@@ -1,5 +1,9 @@
 # Boilerplate-webpack-react
 
+# Deprectated
+
+This repo is deprecated, I haven't updated in a while. Only use for inspiration.
+
 ## Introduction
 
 This is a simple boilerplate project to start fast with Reactjs, webpack and
