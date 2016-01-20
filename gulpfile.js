@@ -73,7 +73,7 @@ gulp.task('webpack-dev-server', function(callback) {
 	browserConfig.devtool = 'eval';
 	browserConfig.debug = true;
   browserConfig.plugins = browserConfig.plugins || [];
-  browserConfig.plugins = browserConfig.plugins.concat([new webpack.HotModuleReplacementPlugin(), new webpack.NoErrorsPlugin()]);
+  browserConfig.plugins = browserConfig.plugins.concat([new webpack.HotModuleReplacementPlugin()]);
 	browserConfig.entry = [
 		'webpack-dev-server/client?http://localhost:8080', 'webpack/hot/only-dev-server', './app/jsx/app.jsx'
 	];
